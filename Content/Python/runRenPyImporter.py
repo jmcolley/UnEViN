@@ -1,3 +1,5 @@
+import unreal
+import sys
 import renpyhax as renpy
 from pprint import pprint
 
@@ -17,7 +19,7 @@ def getPrettierRenpyASTObjectPrintRepresentation(node):
     elif isinstance(node, renpy.ast.Jump):
         finalPrintString += ("  ----  Target: " + str(node.target) + "  ----  Expression: " + str(node.expression) + "  ----  GlobalLabel: " + str(node.global_label))
     elif isinstance(node, renpy.ast.Label):
-        finalPrintString += ("  ----  Parameters: " + str(node.parameters))
+        finalPrintString += ("  ----  Name: " + str(node.name) + "  ----  Parameters: " + str(node.parameters))
     elif isinstance(node, renpy.ast.Return):
         finalPrintString += ("  ----  Expression: " + str(node.expression))
     elif isinstance(node, renpy.ast.Python):
@@ -34,5 +36,23 @@ def recursiveRenpyASTPrint(node, depth):
         for child in node.block:
             recursiveRenpyASTPrint(child, depth+1)
 
-for renpyast in renpy.parser.parse("../../../../Projects/UnEViN/Content/Python/thequestion.rpy"):
-    recursiveRenpyASTPrint(renpyast, 0)
+rpyFileName = sys.argv[1]
+rpyUEBasePath = "/Game/"+rpyFileName
+
+for node in renpy.parser.parse("../../../../Projects/UnEViN/Content/Python/"+rpyFileName+".rpy"):
+    recursiveRenpyASTPrint(node, 0)
+    
+unreal.EditorAssetLibrary.make_directory(rpyUEBasePath)
+unreal.EditorAssetLibrary.make_directory(rpyUEBasePath+"/Scenes")
+unreal.EditorAssetLibrary.make_directory(rpyUEBasePath+"/ChoiceGroups")
+unreal.EditorAssetLibrary.duplicate_asset("/Game/UnEViN/Core/BlankDTs/DT_Characters_Empty", rpyUEBasePath+"/DT_Characters_rpyUEBasePath")
+
+for node in renpy.parser.parse("../../../../Projects/UnEViN/Content/Python/"+rpyFileName+".rpy"):
+    if isinstance(node, renpy.ast.Init):
+        pass
+    elif isinstance(node, renpy.ast.Label):        
+        unreal.EditorAssetLibrary.make_directory(rpyUEBasePath+"/Scenes/"+str(node.name))
+    elif isinstance(node, renpy.ast.Return):
+        pass
+    else:
+        print("ERROR: UNKNOWN RENPY ROOT NODE DETECTED!!!")
