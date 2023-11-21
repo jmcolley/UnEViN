@@ -1,0 +1,217 @@
+[
+{
+	"Name": "KIOS9CXWF5LEG67U",
+	"Type": "SAY",
+	"CharName": "s",
+	"Body": "Hello, I am the script enthusiast.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "9G5M029VITHYYKPF",
+	"Type": "SAY",
+	"CharName": "s",
+	"Body": "This line is also said by me.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "XZY39M660162GC6O",
+	"Type": "SAY",
+	"CharName": "None",
+	"Body": "Whereas this line is spoken by the narrator.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "JZL718E87UF6J0VM",
+	"Type": "SAY",
+	"CharName": "None",
+	"Body": "This line \"confusingly\" contains escaped \"s.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "640HOVPHNYRK5EKQ",
+	"Type": "SAY",
+	"CharName": "g",
+	"Body": "This line is delivered by the GUI preferrer.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "MA7IUW4I948NX7NT",
+	"Type": "FORK",
+	"CharName": "None",
+	"Body": "I have not explicitly defined the choice group I'd like.",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "/Script/Engine.DataTable'/Game/test/ChoiceGroup/DT_Choices_1HSYVQGIM9ROZV2R.DT_Choices_1HSYVQGIM9ROZV2R'",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "YTTXOUW5N0CCNFIM",
+	"Type": "INSTANT",
+	"CharName": "None",
+	"Body": "",
+	"Destination": {
+		"Scene": "/Script/Engine.DataTable'/Game/test/Scenes/DT_Scene_SCENE-TWO.DT_Scene_SCENE-TWO'",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": true,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+},
+{
+	"Name": "FLO4EBYBX57LG4GS",
+	"Type": "SAY",
+	"CharName": "None",
+	"Body": "You have escaped from scene two...!",
+	"Destination": {
+		"Scene": "None",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+}]

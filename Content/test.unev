@@ -5,8 +5,18 @@ MAKECHAR g "GUI Preferrer" #782464
 SAY s "Hello, I am the script enthusiast."
 s "This line is also said by me."
 "Whereas this line is spoken by the narrator."
+"This line \"confusingly\" contains escaped \"s." 
 g "This line is delivered by the GUI preferrer."
-JUMP 'SCENE TWO'
+FORK "I have not explicitly defined the choice group I'd like."
+***
+"sjfjaj"
+"jhfjdfhj"
+"sjhajsh"
+***
+CALL SCENE TWO
+"You have escaped from scene two...!"
+---
 
 ---SCENE TWO---
 "Welcome to scene two!"
+---

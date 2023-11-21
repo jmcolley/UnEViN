@@ -1,0 +1,28 @@
+[
+{
+	"Name": "beginGame",
+	"Type": "INSTANT",
+	"CharName": "None",
+	"Body": "",
+	"Destination": {
+		"Scene": "/Script/Engine.DataTable'/Game/test/Scenes/DT_Scene_SCENE-ONE.DT_Scene_SCENE-ONE'",
+		"RowName": "None"
+	},
+	"DestinationJumpIsCall": false,
+	"Conditions": [],
+	"VariablesToSet": [],
+	"ChoiceGroup": "None",
+	"InputPrompt": {
+		"VariableToSet": {
+			"Name": "None",
+			"Value": "",
+			"Persistent": false
+		},
+		"ShowDefault": false,
+		"StripToAlphanumericASCII": false,
+		"StripSpaces": false,
+		"StripASCIINumbers": false,
+		"StripASCIILetters": false,
+		"ConvertToCase": "Unchanged"
+	}
+}]
