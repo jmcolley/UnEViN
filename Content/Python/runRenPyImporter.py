@@ -49,7 +49,7 @@ def isProbablyBoolNumberOrString(potentialval):
     else:
         return False
 
-rpyFileName = sys.argv[1]
+rpyFileName = sys.argv[1].replace(".rpy", "")
 rpyFilePath = "../../../../Projects/UnEViN/Content/"+rpyFileName+".rpy"
 rpyUEBasePath = "/Game/"+rpyFileName
 

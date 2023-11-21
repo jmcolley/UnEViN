@@ -1,0 +1,12 @@
+MAKECHAR s "Script Enthusiast" #6dc5ed
+MAKECHAR g "GUI Preferrer" #782464
+
+---SCENE ONE---
+SAY s "Hello, I am the script enthusiast."
+s "This line is also said by me."
+"Whereas this line is spoken by the narrator."
+g "This line is delivered by the GUI preferrer."
+JUMP 'SCENE TWO'
+
+---SCENE TWO---
+"Welcome to scene two!"

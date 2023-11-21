@@ -1,0 +1,523 @@
+[
+	{
+		"Type": "SAY",
+		"CharName": "test1",
+		"DestinationJumpIsCall": false,
+		"ChoiceGroup": "None"
+	},
+	{
+		"Name": "Repeat",
+		"Type": "SAY",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"5250E2E74B12894D94E6209683B08344\", \"Yep, you\\'ve looped back to the start.\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "ExactlyEqualTo",
+				"Variable":
+				{
+					"Name": "VisitedStartAlready",
+					"Value": "True",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "blank",
+		"Type": "INSTANT",
+		"CharName": "None",
+		"Body": "",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [
+			{
+				"Name": "VisitedStartAlready",
+				"Value": "True",
+				"Persistent": false
+			}
+		],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "InputPromptTest_0",
+		"Type": "PROMPT",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"CCC1DAD34138EDEC94FB2BBB11D6F5E3\", \"Please enter your name:\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "DoesNotEqual",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "NULL",
+					"Persistent": true
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "PlayerName",
+				"Value": "Defaultius Nameius",
+				"Persistent": false
+			},
+			"ShowDefault": true,
+			"StripToAlphanumericASCII": true,
+			"StripSpaces": false,
+			"StripASCIINumbers": true,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Camel"
+		}
+	},
+	{
+		"Name": "InputPromptTest",
+		"Type": "PROMPT",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"17D1A332492614814B136682B7898DCA\", \"Please enter your name:\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "ExactlyEqualTo",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "NULL",
+					"Persistent": true
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "PlayerName",
+				"Value": "Defaultius Nameius",
+				"Persistent": true
+			},
+			"ShowDefault": true,
+			"StripToAlphanumericASCII": true,
+			"StripSpaces": false,
+			"StripASCIINumbers": true,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Camel"
+		}
+	},
+	{
+		"Name": "InterpolationTest",
+		"Type": "SAY",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"9EBB07224630817918DD8B9595053B8C\", \"Wow, huullo [persistent.PlayerName]! So good to see you, [persistent.PlayerName]!\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "ExactlyEqualTo",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "NULL",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "InterpolationTest_0",
+		"Type": "SAY",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"791D5F424019064BFB0932B0E2F77FEF\", \"Wow, hello [PlayerName]! Why did you tell me you name was [persistent.PlayerName] to begin with?\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "DoesNotEqual",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "NULL",
+					"Persistent": false
+				}
+			},
+			{
+				"ConditionType": "DoesNotEqual",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "[persistent.Playername]",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "InterpolationTest_1",
+		"Type": "SAY",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"0A5A8E0D4CF3A2BE88E47EBEA76EE21A\", \"Glad you\\'re back [PlayerName]!\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "ExactlyEqualTo",
+				"Variable":
+				{
+					"Name": "PlayerName",
+					"Value": "[persistent.Playername]",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "VarTest",
+		"Type": "SAY",
+		"CharName": "test2",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"267ABC5A4351CFB9192677913ED22B0A\", \"Hey, didn\\'t you make a choice already?\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "DoesNotEqual",
+				"Variable":
+				{
+					"Name": "ChoiceMade",
+					"Value": "NULL",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "VarTest_0",
+		"Type": "SAY",
+		"CharName": "test2",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"36E840A94C99D1F73306C18E7E2E51D2\", \"Oh well...\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [
+			{
+				"ConditionType": "DoesNotEqual",
+				"Variable":
+				{
+					"Name": "ChoiceMade",
+					"Value": "NULL",
+					"Persistent": false
+				}
+			}
+		],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "Second",
+		"Type": "CHOICE",
+		"CharName": "test2",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"866D8D274795B70E7FB85A9C18FE8591\", \"This is the second line of dialogue.\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "/Script/Engine.DataTable'/Game/ExampleVN/ChoiceGroups/DT_TestChoiceGroup.DT_TestChoiceGroup'",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "Third",
+		"Type": "SAY",
+		"CharName": "test1",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"403FEC0D4E5FAEEEA17DB28BECFE4949\", \"This is the third line of dialogue, which is ludicrously long so as to provide me with some material with which I can observe the behaviour of the scroll box in my UI widget. In any sane Visual Novel you would not want to write an entire paragraph of text as a single line of dialogue. Ideally any one line should be short enough to be consumed essentially instantly by a skilled reader, as this ensures the pace of your VN is not held up by long periods of reading in between exciting mouse clicks that trigger visual changes. If you\\'re going to write very long passages, why not just write a novel novel? Really this medium is more like a screenplay than it is a novel. Short, snappy. Little snippets of narration or thoughts from the main character are totally fine, unlike a pure dialogue, but really you should be leaning in the direction of most lines in your VN being a character saying something, or at least a thought. Maybe I\\'m putting unnecessary restrictions on things. I suppose adventure games are mostly narration. That would work alright in this format too. My overall point is just that you\\'re really throwing away the unique aspects of the VN medium if you just have everything stop so the player can read a huge amount of text. Like how no one has ever read any of the books in Skyrim, but you probably click through dialogue in a CRPG quickly even if it\\'s voice acted because it\\'s just so quick to skim. I hope I\\'ve reached a decent wordcount now. Lorem ipsum dolor sit amet....\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "NewRow",
+		"Type": "SAY",
+		"CharName": "test3",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"190293614D2D2B9A569EA8AD2BEE171E\", \"We are now going to make a small detour to test the Call Stack. Please stand by,\")",
+		"Destination":
+		{
+			"Scene": "/Script/Engine.DataTable'/Game/ExampleVN/Scenes/DT_Detour1_A.DT_Detour1_A'",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": true,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "NewRow_0",
+		"Type": "SAY",
+		"CharName": "test3",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"BD8E10D840830E7EAF5EFB876DEF2C67\", \"You made it back from the Call Stack!\")",
+		"Destination":
+		{
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	},
+	{
+		"Name": "NewRow_1",
+		"Type": "SAY",
+		"CharName": "test3",
+		"Body": "NSLOCTEXT(\"[35260E08ED8C75280E90BDEDD960D81B]\", \"88E48CA340AC6953E8B3AFBCBA4B90D2\", \"Hold on... I\\'m sending you all the way back to the start!\")",
+		"Destination":
+		{
+			"Scene": "/Script/Engine.DataTable'/Game/ExampleVN/Scenes/DT_TestSceneJSONTest.DT_TestSceneJSONTest'",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt":
+		{
+			"VariableToSet":
+			{
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	}
+]

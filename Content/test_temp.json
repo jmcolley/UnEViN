@@ -1,0 +1,29 @@
+[
+	{
+		"Name": "NewRow",
+		"Type": "SAY",
+		"CharName": "None",
+		"Body": "",
+		"Destination": {
+			"Scene": "None",
+			"RowName": "None"
+		},
+		"DestinationJumpIsCall": false,
+		"Conditions": [],
+		"VariablesToSet": [],
+		"ChoiceGroup": "None",
+		"InputPrompt": {
+			"VariableToSet": {
+				"Name": "None",
+				"Value": "",
+				"Persistent": false
+			},
+			"ShowDefault": false,
+			"StripToAlphanumericASCII": false,
+			"StripSpaces": false,
+			"StripASCIINumbers": false,
+			"StripASCIILetters": false,
+			"ConvertToCase": "Unchanged"
+		}
+	}
+]
