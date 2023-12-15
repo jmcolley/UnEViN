@@ -4,7 +4,7 @@ import unreal
 import unevin
 
 
-subCommands = ['CALL', 'JUMP', 'CAM', 'LEVEL', 'SET', 'IF', 'PROMPT_DEFAULT', 'PROMPT_SANITISE']
+subCommands = ['BY', 'CALL', 'JUMP', 'CAM', 'LEVEL', 'SET', 'IF', 'PROMPT_DEFAULT', 'PROMPT_SANITISE']
 choiceSubCommands = ['CALL', 'JUMP', 'VISIBLEIF', 'ACTIVEIF']
 
 def chunkify(inList, separators):
@@ -98,7 +98,6 @@ def parseLineToLineOfDialogObject(line, lineNum):
         elif splitLine[0] == 'FORK':
             if "BY" in splitLine:
                 currentLineObject = parseLineToLineOfDialogObject("SAY" + line[4:], lineNum)
-                currentLineObject.setChoiceGroup(unevinScriptName, splitLine[splitLine.index("BY")+1])    
                 currentLineObject.setType("FORK")               
             else:
                 mostRecentlyDefinedChoiceGroup = [cg for cg in choiceGroups if cg[1] == lineNum+1]
@@ -124,7 +123,12 @@ def parseLineToLineOfDialogObject(line, lineNum):
                         currentLineObject.setIsCall(True)
                         chunk[0] = "JUMP"
 
-                    if chunk[0] == "JUMP":
+                    if chunk[0] == "BY":
+                        if (len(chunk) == 2):
+                            currentLineObject.setChoiceGroup(unevinScriptName, unevin.cleanseName(chunk[1]))
+                        else:
+                            print(f"ERROR: Malformed BY at line {lineNum}!")
+                    elif chunk[0] == "JUMP":
                         if (len(chunk) == 2):
                             currentLineObject.setDestination(unevin.Destination.from_script(unevinScriptName, unevin.trimSpeechMarks(chunk[1])))
                         else:
@@ -154,9 +158,8 @@ def parseLineToLineOfDialogObject(line, lineNum):
                             print(f"ERROR: Malformed IF at line {lineNum}!")
                     elif chunk[0] == "PROMPT_DEFAULT":
                         if (len(chunk) == 3):
-                            currentLineObject.getInputPrompt().getVariableToSet().setValue(chunk[1])
+                            currentLineObject.getInputPrompt().getVariableToSet().setValue(unevin.trimSpeechMarks(chunk[1]))
                             currentLineObject.getInputPrompt().setShowDefault(chunk[2])
-                            print(currentLineObject.getInputPrompt().getDict())
                         else:
                             print(f"ERROR: Malformed PROMPT_DEFAULT at line {lineNum}!")                    
                     elif chunk[0] == "PROMPT_SANITISE":
@@ -166,7 +169,6 @@ def parseLineToLineOfDialogObject(line, lineNum):
                             currentLineObject.getInputPrompt().setStripASCIINumbers(chunk[3])
                             currentLineObject.getInputPrompt().setStripASCIILetters(chunk[4])
                             currentLineObject.getInputPrompt().setConvertToCase(chunk[5])
-                            print(currentLineObject.getInputPrompt().getDict())
                         else:
                             print(f"ERROR: Malformed PROMPT_SANITISE at line {lineNum}!")  
             else:
@@ -250,7 +252,7 @@ with open(unevinScriptFilePath, 'r') as script:
     for line in script: 
         lineNum += 1
         context = getLineContext(lineNum)
-        if context['choiceGroup'] is not None: #Dealing with lines which are in choice group definition blocks
+        if context['choiceGroup'] is not None and not line.startswith("***"): #Dealing with lines which are in choice group definition blocks
             choiceObject = parseLineToChoiceObject(line, lineNum)
             unevin.appendJSON(choiceObject, choiceGroupsDict[context['choiceGroup']][1])
         elif context['label'] is not None: #Dealing with lines that are in scene blocks

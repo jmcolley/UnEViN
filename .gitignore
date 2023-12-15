@@ -77,3 +77,8 @@ DerivedDataCache/*
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Demo stuff
+Stylized_Egypt/
+Greek_island/
+*_temp.json

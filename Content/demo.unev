@@ -1,25 +1,168 @@
-MAKECHAR d1 "Demo 1" #6dc5ed
+MAKECHAR y "You" #CC66FF
+MAKECHAR d1 "Demo 1" #6DC5ED
+MAKECHAR e1 "Egyptian Tour Guide" #CC7722
+MAKECHAR e2 "Statues" #FF0000
 
 ---START---
-d1 "Welcome to the demo!" SET test1 3
-"This line will appear if you are smart. #1 test1 > 2" IF test1 > 2
-"This line will appear if you are dumb. test1 < 3" IF test1 < 3
-"This line will appear if you are smart. #2 test1 >= 3" IF test1 >= 3
-"This line will appear if you are dumb. test1 = 2" IF test1 = 2
-"This line will appear if you are dumb. test1 != 3" IF test1 != 3
-"This line will appear if you are smart. #3 test1 != 2" IF test1 != 2
-"This line will appear if you are smart. #4 test1 != 4" IF test1 != 4
-"This line will appear if you are dumb. test1 <= five" IF test1 <= five
-"This line will appear if you are super smart. #5 test1 = 3.0" IF test1 = 3.0
-"This line will appear." IF test2 = val2 CAM "coolcamera2" Linear 5.0
-SET test2 val3 IF test2 = val2
-PROMPT var1 d1 "This is a test prompt." thingy1 thingy3 thingy4
-PROMPT var2 "This is a test prompt 2." thingy1 thingy3 SET headless 5 PROMPT_DEFAULT var2def True PROMPT_SANITISE True False True False Camel
-JUMP "OTHER SCENE" IF test2 = val2
-"This line will appear too." IF test2 = val3
-"This line is spoken by the narrator." SET test3 val3 JUMP "OTHER SCENE" SET test4 val4 SET test5 val5
+d1 "Welcome to the demo!"
+JUMP "LEVEL SELECT"
 ---
 
----OTHER SCENE---
-"Eee"
+---LEVEL SELECT---
+FORK d1 "Where would you like to go?"
+***
+"Egypt" JUMP EGYPT ACTIVEIF egyptdone != true
+"Greece" JUMP GREECE ACTIVEIF greecedone != true
+***
+---
+
+---EGYPT---
+LEVEL Stylized_Egypt_Demo
+e1 "Welcome to \"Stylised Egypt Demo\"!"
+e1 "...which was free on the Unreal Marketplace."
+JUMP "EGYPT TOUR START"
+---
+
+---EGYPT TOUR START---
+FORK e1 "Where would you like to head towards?"
+***
+"The bridge" JUMP "EGYPT BRIDGE"
+"Turn around" JUMP "EGYPT 180"
+***
+---
+
+---EGYPT 180---
+"You spin around." CAM 180cam Linear 1
+e1 "Not much going on over here, just a glowing empty room, and a mysterious doorway, and a staircase."
+JUMP "EGYPT 180 EXAMINE"
+---
+
+---EGYPT 180 EXAMINE---
+FORK "You decide to check out..." CAM 180cam EaseInAndOut 2
+***
+"The glowing empty room" JUMP "EGYPT EMPTY ROOM" VISIBLEIF visitedglowingroom != true
+"The mysterious doorway" JUMP "EGYPT DOORWAY" VISIBLEIF gotkey != true
+"The staircase" JUMP "EGYPT STAIRCASE" 
+***
+---
+
+---EGYPT EMPTY ROOM---
+"What secrets will you discover?" CAM emptycam EaseInAndOut 3
+"Nevermind, it's just as empty as you were promised."
+"And yet it glows."
+SET visitedglowingroom true
+JUMP "EGYPT 180 EXAMINE"
+---
+
+---EGYPT DOORWAY---
+"There's some stuff stored here." CAM doorwaycam EaseInAndOut 3
+e1 "Hey, do you see that? Under those boxes, it looks like..."
+"You got a MAGICAL ARTIFACT."
+e1 "A magical artifact!"
+SET gotkey true
+JUMP "EGYPT 180 EXAMINE"
+---
+
+---EGYPT STAIRCASE---
+"You head towards the stairs." CAM staircam1 EaseInAndOut 3
+"You head up the stairs. I haven't implemented the ability to move through multiple cameras in a single line yet." CAM staircam2 EaseInAndOut 2
+"You've finally gotten to the top, three cameras later." CAM staircam3 EaseInAndOut 2.5
+JUMP "EGYPT PYRAMID"
+---
+
+---EGYPT BRIDGE---
+e1 "We're going towards the bridge!" CAM bridgecam EaseInAndOut 4
+e1 "There's nothing here."
+FORK "Should I head left or right from here?"
+***
+"Head left" JUMP "EGYPT POSTBRIDGE LEFT"
+"Head right" JUMP "EGYPT POSTBRIDGE RIGHT"
+***
+---
+
+---EGYPT POSTBRIDGE LEFT---
+"You head left." CAM postbridgeleftcam EaseInAndOut 2
+e1 "Sorry, but our tour doesn't include breaking into people's houses."
+e1 "We'll have to head the other way."
+JUMP "EGYPT POSTBRIDGE RIGHT"
+---
+
+---EGYPT POSTBRIDGE RIGHT---
+"You head right." CAM postbridgerightcam1 EaseInAndOut 3
+e1 "Spooky!"
+"You press on since you're scared of the dark." CAM postbridgerightcam2 EaseInAndOut 5
+e1 "Ah, that's much nicer."
+JUMP "EGYPT PYRAMID"
+---
+
+---EGYPT PYRAMID---
+e1 "Behold! The pyramid!"
+"You behold the pyramid."
+e1 "How would you describe this wondrous structure?"
+PROMPT pyramiddescription "I would say it is:" PROMPT_DEFAULT "wondrous" True PROMPT_SANITISE True False True False "Lower"
+e1 "I am very glad to hear you think the pyramid is [pyramiddescription]!"
+e1 "Unless you typed in something unpleasant."
+FORK e1 "Where to next?"
+***
+"Go look at the statues" JUMP "EGYPT STATUES"
+***
+---
+
+---EGYPT STATUES---
+"As you approach, you are made dizzy by the scale of the statues." CAM statuecam EaseInAndOut 5
+e2 "Begone, squishy!"
+e2 "Unless..."
+e2 "Unless you have the MAGICAL ARTIFACT we want!"
+FORK "How to react!?"
+***
+"Give them the MAGICAL ARTIFACT" JUMP "EGYPT MAGIC" ACTIVEIF gotkey = true
+"Be gone." JUMP "EGYPT BEGONE"
+***
+---
+
+---EGYPT BEGONE---
+y "I'm afraid I do not have a MAGICAL ARTIFACT, and will therefore be going." IF gotkey != true
+y "I do have the MAGICAL ARTIFACT, but refuse to share it, sorry." IF gotkey = true
+e2 "OKAY! GOODBYE!"
+"You scramble back to the start of the tour...!" CAM startcam EaseInAndOut 1.5
+JUMP "EGYPT TOUR START"
+---
+
+---EGYPT MAGIC---
+y "Please, take this MAGICAL ARTIFACT!"
+"You no longer have a MAGICAL ARTIFACT."
+e2 "Hmm..."
+e2 "Hmmmmmmmm..."
+e2 "It'll do."
+e2 "But we are banishing you back to the floating UNEVIN sign in the sky."
+y "Noooooooooooooooooooo!"
+SET egyptdone true
+LEVEL BaseMap
+JUMP "LEVEL SELECT"
+---
+
+---GREECE---
+LEVEL L_greek_island
+"Wow!"
+"That took a really long time to load in!"
+FORK "What do you do?"
+***
+"Float to shore" JUMP "GREECE SHORE"
+***
+---
+
+---GREECE SHORE---
+"It's a long way for you, a levitation amateur..." CAM shore EaseInAndOut 8
+"...but you make it."
+"Unfortunately it quickly dawns on you that there's absolutely nothing to do in this Greece map since I already demonstrated all of my features in the Egypt portion of the demo. However, it is the ideal place for GREEKING to demonstrate how my UI handles long text! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut feugiat nunc. Aenean tincidunt volutpat arcu, imperdiet dapibus dolor interdum sed. Maecenas mauris elit, aliquam vel vestibulum a, egestas id sapien. Aenean at lacus mauris. Sed augue est, aliquet et sem non, pretium ultrices nulla. Donec a ligula eu sem ultrices eleifend. Suspendisse potenti. Pellentesque euismod ligula eget est faucibus, eu pretium lectus viverra. Duis nec placerat arcu. Maecenas sagittis porttitor sapien, ut vehicula nibh consectetur sed. Morbi quis diam dignissim, vehicula tellus eget, molestie arcu. In maximus orci a lacus rutrum, in tempus neque imperdiet. Nulla vel imperdiet urna. Duis malesuada mattis odio, at efficitur dui ullamcorper ac. Mauris id ex convallis, venenatis metus mollis, porttitor nunc. Proin aliquam, quam non hendrerit feugiat, orci nulla maximus massa, a aliquam ex elit sed metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor maximus justo in gravida. Suspendisse dapibus, lacus nec interdum tempus, sapien ipsum feugiat purus, quis consequat nibh risus non mi. In hac habitasse platea dictumst. Ut ac massa vitae dolor ornare malesuada eget eget tortor. Cras varius, urna ac tincidunt eleifend, ligula quam congue metus, in lacinia enim quam ut nisi."
+FORK "There's only one thing to do..."
+***
+"Return to the sky" JUMP "RETURN TO SKY"
+***
+---
+
+---RETURN TO SKY---
+SET greecedone true
+LEVEL BaseMap
+JUMP "LEVEL SELECT"
 ---

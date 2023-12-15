@@ -168,7 +168,7 @@ class TransitionSettings(UnevinStruct):
         self.dictionary = {
             "BlendType": "Linear",
             "BlendTime": 0,
-            "BlendExponent": 0,
+            "BlendExponent": 1.2,
             "LockOutgoingCamera": False
         }
     
