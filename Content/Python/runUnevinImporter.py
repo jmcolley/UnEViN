@@ -3,6 +3,23 @@ from pathlib import Path
 import unreal
 import unevin
 
+
+subCommands = ['CALL', 'JUMP', 'CAM', 'LEVEL', 'SET', 'IF', 'PROMPT_DEFAULT', 'PROMPT_SANITISE']
+choiceSubCommands = ['CALL', 'JUMP', 'VISIBLEIF', 'ACTIVEIF']
+
+def chunkify(inList, separators):
+    separators.append('END')
+    inList.append('END')
+    chunks = []
+    currentChunk = []
+    for item in inList:
+        if item in separators and len(currentChunk) != 0:
+            chunks.append(currentChunk)
+            currentChunk = []
+        currentChunk.append(item)
+    return chunks
+
+
 unevinScriptFilePath = Path(sys.argv[1])
 unevinScriptFolder = unevinScriptFilePath.parent
 unevinScriptName = unevinScriptFilePath.stem
@@ -43,7 +60,8 @@ def splitLineUp(line):
         if not insideString:
             newLine.append(item.replace(r'\"', '"'))
         else: 
-            newLine[-1] += " " + item.replace(r'\"', '"')                
+            newLine[-1] += " " + item.replace(r'\"', '"')  
+            
         if item.replace(r'\"', '').count('"') % 2 != 0:
             insideString = not insideString
     splitLine = newLine
@@ -62,65 +80,131 @@ def getLineContext(lineNumber):
     return context
 
 def parseLineToLineOfDialogObject(line, lineNum):
-    if line[0] not in string.ascii_letters + string.digits + '"_': #Check if the first character is anything valid
+    if line[0] not in string.ascii_letters + string.digits + '"_': # Check if the first character is anything invalid
         return None
     else:
         splitLine = splitLineUp(line)        
         print(splitLine)
+
         currentLineObject = unevin.LineOfDialog()
-        if splitLine[0] == 'SAY':
-            if len(splitLine) < 3 or (splitLine[1].startswith('"') and splitLine[1].endswith('"')):
-                return parseLineToLineOfDialogObject("SAY None " + line[4:], lineNum)
-            elif (splitLine[2].startswith('"') and splitLine[2].endswith('"')):
-                currentLineObject.setCharacter(splitLine[1])
-                currentLineObject.setBody(splitLine[2][1:-1])
-                if "CALL" in splitLine:
-                    currentLineObject.setIsCall(True)
-                    splitLine[splitLine.index("CALL")] = "JUMP"
-                if "JUMP" in splitLine:
-                    currentLineObject.setDestination(unevinScriptName, splitLine[splitLine.index("JUMP")+1])
-            else:
-                return None
-        elif splitLine[0] == 'INSTANT':
+
+        if splitLine[0] == 'INSTANT':
             currentLineObject = parseLineToLineOfDialogObject("SAY" + line[7:], lineNum)
-            currentLineObject.setType("INSTANT")
+            currentLineObject.setType("INSTANT")        
+        elif splitLine[0] == 'PROMPT':
+            currentLineObject = parseLineToLineOfDialogObject("SAY" + line[(7 + len(splitLine[1])):], lineNum)
+            currentLineObject.setType("PROMPT")
+            currentLineObject.getInputPrompt().getVariableToSet().setName(splitLine[1])
         elif splitLine[0] == 'FORK':
             if "BY" in splitLine:
                 currentLineObject = parseLineToLineOfDialogObject("SAY" + line[4:], lineNum)
                 currentLineObject.setChoiceGroup(unevinScriptName, splitLine[splitLine.index("BY")+1])    
-                currentLineObject.setType("FORK")            
+                currentLineObject.setType("FORK")               
             else:
-                recentlyDefinedChoiceGroup = [cg for cg in choiceGroups if cg[1] == lineNum+1]
-                if len(recentlyDefinedChoiceGroup) == 1:
-                    currentLineObject = parseLineToLineOfDialogObject(line + f" BY {recentlyDefinedChoiceGroup[0][0]}", lineNum)
+                mostRecentlyDefinedChoiceGroup = [cg for cg in choiceGroups if cg[1] == lineNum+1]
+                if len(mostRecentlyDefinedChoiceGroup) == 1:
+                    currentLineObject = parseLineToLineOfDialogObject(line + f" BY {mostRecentlyDefinedChoiceGroup[0][0]}", lineNum)
                 else:
                     print(f"ERROR: No choice group defined for FORK at line {lineNum}!")
-                    return None                    
-        elif splitLine[0] == 'PROMPT':
-            #TODO: Implement
-            pass
-        elif splitLine[0] == 'SET':
-            #TODO: Implement
-            pass
-        elif splitLine[0] == 'JUMP':  
-            currentLineObject = parseLineToLineOfDialogObject(f'INSTANT None "" JUMP {unevin.cleanseName(" ".join([splitLine[i] for i in range(1, len(splitLine))]))}', lineNum)
-        elif splitLine[0] == 'CALL':
-            currentLineObject = parseLineToLineOfDialogObject("JUMP" + line[4:], lineNum)
-            currentLineObject.setIsCall(True)
-        else:
-            return parseLineToLineOfDialogObject("SAY " + line, lineNum)        
-        return currentLineObject        
+                    return None             
+        elif splitLine[0] in subCommands:
+            return parseLineToLineOfDialogObject(f'INSTANT None "" ' + line, lineNum)
+        elif splitLine[0] == 'SAY':
+            if len(splitLine) < 3 or (splitLine[1].startswith('"') and splitLine[1].endswith('"')):
+                currentLineObject = parseLineToLineOfDialogObject("SAY None " + line[4:], lineNum)
+            elif (splitLine[2].startswith('"') and splitLine[2].endswith('"')):
+                currentLineObject.setCharacter(splitLine[1])
+                currentLineObject.setBody(unevin.trimSpeechMarks(splitLine[2]))
 
-def parseLineToChoiceObject(line):
+                chunks = chunkify(splitLine[3:], subCommands)
+                
+                for chunk in chunks:   
+                    print(chunk)             
+                    if chunk[0] == "CALL":
+                        currentLineObject.setIsCall(True)
+                        chunk[0] = "JUMP"
+
+                    if chunk[0] == "JUMP":
+                        if (len(chunk) == 2):
+                            currentLineObject.setDestination(unevin.Destination.from_script(unevinScriptName, unevin.trimSpeechMarks(chunk[1])))
+                        else:
+                            print(f"ERROR: Malformed CALL/JUMP at line {lineNum}!")
+                    elif chunk[0] == "CAM":
+                        if (len(chunk) == 2 or len(chunk) == 4):
+                            currentLineObject.getViewpoint().setCameraTagName(unevin.cleanseName(chunk[1]))
+                            if (len(chunk) == 4):
+                                if (chunk[2] in ['Linear', 'Cubic', 'EaseIn', 'EaseOut', 'EaseInAndOut', 'NoBlending']) and unevin.isANumber(chunk[3]):
+                                    currentLineObject.getViewpoint().setTransitionSettings(unevin.TransitionSettings.from_type_and_time(chunk[2], float(unevin.trimSpeechMarks(chunk[3]))))
+                        else:
+                            print(f"ERROR: Malformed CAM at line {lineNum}!")
+                    elif chunk[0] == "LEVEL":
+                        if (len(chunk) == 2):
+                            currentLineObject.getViewpoint().setLevelName(unevin.cleanseName(chunk[1]))       
+                        else:
+                            print(f"ERROR: Malformed LEVEL at line {lineNum}!")
+                    elif chunk[0] == "SET":
+                        if (len(chunk) == 3):
+                            currentLineObject.addVariableToSet(unevin.Variable.from_properties(unevin.cleanseName(chunk[1]), unevin.trimSpeechMarks(chunk[2])))   
+                        else:
+                            print(f"ERROR: Malformed SET at line {lineNum}!")
+                    elif chunk[0] == "IF":
+                        if (len(chunk) == 4):
+                            currentLineObject.addCondition(unevin.Condition.from_properties_and_symbol(unevin.cleanseName(chunk[1]), unevin.trimSpeechMarks(chunk[2]), unevin.trimSpeechMarks(chunk[3])))
+                        else:
+                            print(f"ERROR: Malformed IF at line {lineNum}!")
+                    elif chunk[0] == "PROMPT_DEFAULT":
+                        if (len(chunk) == 3):
+                            currentLineObject.getInputPrompt().getVariableToSet().setValue(chunk[1])
+                            currentLineObject.getInputPrompt().setShowDefault(chunk[2])
+                            print(currentLineObject.getInputPrompt().getDict())
+                        else:
+                            print(f"ERROR: Malformed PROMPT_DEFAULT at line {lineNum}!")                    
+                    elif chunk[0] == "PROMPT_SANITISE":
+                        if (len(chunk) == 6):
+                            currentLineObject.getInputPrompt().setStripToAlphanumericASCII(chunk[1])
+                            currentLineObject.getInputPrompt().setStripSpaces(chunk[2])
+                            currentLineObject.getInputPrompt().setStripASCIINumbers(chunk[3])
+                            currentLineObject.getInputPrompt().setStripASCIILetters(chunk[4])
+                            currentLineObject.getInputPrompt().setConvertToCase(chunk[5])
+                            print(currentLineObject.getInputPrompt().getDict())
+                        else:
+                            print(f"ERROR: Malformed PROMPT_SANITISE at line {lineNum}!")  
+            else:
+                print(f"ERROR: Malformed line at line {lineNum}!")
+                return None  
+        else:
+            return parseLineToLineOfDialogObject("SAY " + line, lineNum)  
+                        
+        return currentLineObject   
+
+def parseLineToChoiceObject(line, lineNum):
     splitLine = splitLineUp(line)
-    if len(splitLine) == 1 and splitLine[0].startswith('"'):
+    if len(splitLine) >= 1 and splitLine[0].startswith('"'):
         currentChoiceObject = unevin.Choice()
-        currentChoiceObject.setBody(splitLine[0][1:-1])
+        currentChoiceObject.setBody(unevin.trimSpeechMarks(splitLine[0]))
+        chunks = chunkify(splitLine[1:], choiceSubCommands)
+        for chunk in chunks:
+            if chunk[0] == 'CALL':
+                currentChoiceObject.setIsCall(True)
+                chunk[0] = "JUMP"
+
+            if chunk[0] == 'JUMP':
+                if (len(chunk) == 2):
+                    currentChoiceObject.setDestination(unevin.Destination.from_script(unevinScriptName, unevin.trimSpeechMarks(chunk[1])))
+                else:
+                    print(f"ERROR: Malformed CALL/JUMP at line {lineNum}!")
+            elif chunk[0] in ['VISIBLEIF', 'ACTIVEIF']:
+                if (len(chunk) == 4):
+                    currentChoiceObject.addCondition(chunk[0], unevin.Condition.from_properties_and_symbol(unevin.cleanseName(chunk[1]), unevin.trimSpeechMarks(chunk[2]), unevin.trimSpeechMarks(chunk[3])))
+                else:
+                    print(f"ERROR: Malformed VISIBLEIF/ACTIVEIF at line {lineNum}!")
+
         return currentChoiceObject
     else:
+        print(f"ERROR: Malformed choice at line {lineNum}!")
         return None
     
-def parseLineToCharacterObject(line):
+def parseLineToCharacterObject(line, lineNum):
     splitLine = splitLineUp(line)
     if splitLine[0] == 'MAKECHAR' and len(splitLine) >= 3:
         currentCharacterObject = unevin.Character()
@@ -130,15 +214,8 @@ def parseLineToCharacterObject(line):
             currentCharacterObject.setColor(splitLine[3])
         return currentCharacterObject
     else:
+        print(f"ERROR: Malformed MAKECHAR at line {lineNum}!")
         return None
-
-
-def appendJSON(object, filePath):
-    if object is not None:
-        with open(filePath, 'a+') as JSONFile:
-            if filePath.stat().st_size > 5:  #If it's too big to have just '[' in it, we need a prefixing comma
-                JSONFile.write(",\n")
-        object.appendJSONToFile(filePath)
 
                  
 #First pass to establish label and choice group blocks in the script.
@@ -174,14 +251,14 @@ with open(unevinScriptFilePath, 'r') as script:
         lineNum += 1
         context = getLineContext(lineNum)
         if context['choiceGroup'] is not None:
-            choiceObject = parseLineToChoiceObject(line)
-            appendJSON(choiceObject, choiceGroupsDict[context['choiceGroup']][1])
+            choiceObject = parseLineToChoiceObject(line, lineNum)
+            unevin.appendJSON(choiceObject, choiceGroupsDict[context['choiceGroup']][1])
         elif context['label'] is not None: #Dealing with lines that are in scene blocks
             lineObject = parseLineToLineOfDialogObject(line, lineNum)
-            appendJSON(lineObject, scenesDict[context['label']][1])
+            unevin.appendJSON(lineObject, scenesDict[context['label']][1])
         else: #Dealing with lines outside of any blocks (i.e. character definitions)
-            characterObject = parseLineToCharacterObject(line)
-            appendJSON(characterObject, characters[1])
+            characterObject = parseLineToCharacterObject(line, lineNum)
+            unevin.appendJSON(characterObject, characters[1])
             
  
 #Put the final ] characters into the JSON files we've generated and import them to Unreal
@@ -208,12 +285,15 @@ with open(initJSONPath, 'w') as initJSONFile:
 initSceneLineObject = unevin.LineOfDialog()
 initSceneLineObject.setRowName("beginGame")
 initSceneLineObject.setType("INSTANT")
-initSceneLineObject.setDestination(unevinScriptName, labels[0][0])
-appendJSON(initSceneLineObject, initJSONPath)
+initSceneLineObject.setDestination(unevin.Destination.from_script(unevinScriptName, labels[0][0]))
+unevin.appendJSON(initSceneLineObject, initJSONPath)
 with open(initJSONPath, 'a+') as initJSONFile:
     initJSONFile.write("]")
 initSceneTable = unreal.EditorAssetLibrary.duplicate_asset("/Game/UnEViN/Core/BlankDTs/DT_Scene_Empty", f"/Game/{unevinScriptName}/DT_Scene_Init_{unevinScriptName}")
 unreal.DataTableFunctionLibrary.fill_data_table_from_json_file(initSceneTable, str(initJSONPath))
+
+#Point to init scene from game start config
+unevin.setActiveVN(unevinScriptName, unevinScriptFolder/f"{unevinScriptName}_CoreStart_temp.json")
 
 
 #TODO: reimplement cleaning up of JSON files with a million checks
