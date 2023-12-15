@@ -247,16 +247,16 @@ with open(characters[1], 'w') as charactersJSONFile:
 #Second pass to populate lists in dict with objects    
 with open(unevinScriptFilePath, 'r') as script:
     lineNum = 0
-    for line in script: #Dealing with lines which are in choice group definition blocks
+    for line in script: 
         lineNum += 1
         context = getLineContext(lineNum)
-        if context['choiceGroup'] is not None:
+        if context['choiceGroup'] is not None: #Dealing with lines which are in choice group definition blocks
             choiceObject = parseLineToChoiceObject(line, lineNum)
             unevin.appendJSON(choiceObject, choiceGroupsDict[context['choiceGroup']][1])
         elif context['label'] is not None: #Dealing with lines that are in scene blocks
             lineObject = parseLineToLineOfDialogObject(line, lineNum)
             unevin.appendJSON(lineObject, scenesDict[context['label']][1])
-        else: #Dealing with lines outside of any blocks (i.e. character definitions)
+        elif len(line.strip()) > 0: #Dealing with lines outside of any blocks (i.e. character definitions)
             characterObject = parseLineToCharacterObject(line, lineNum)
             unevin.appendJSON(characterObject, characters[1])
             

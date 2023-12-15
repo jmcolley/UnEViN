@@ -119,9 +119,9 @@ class Condition(UnevinStruct):
         elif symbol == r'<=' or symbol == r'=<':
             conType = "LessThanOrEqualTo"
         elif symbol == r'<':
-            conType = "GreaterThanOrEqualTo"
+            conType = "StrictlyLessThan"
         elif symbol == r'>=' or symbol == r'=>':
-            conType = "LessThanOrEqualTo"
+            conType = "GreaterThanOrEqualTo"
         elif symbol == r'>':
             conType = "StrictlyGreaterThan"
         self.setType(conType)
@@ -254,9 +254,9 @@ class InputPrompt(UnevinStruct):
         
 class LineOfDialog(UnevinStruct):
     def __init__(self):
-        self.viewpoint = Viewpoint()
-        self.inputprompt = InputPrompt()
         self.destination = Destination()
+        self.inputprompt = InputPrompt()
+        self.viewpoint = Viewpoint()
         self.dictionary = {
             "Name": generateRandomName(),
             "Type": "SAY",
@@ -278,7 +278,7 @@ class LineOfDialog(UnevinStruct):
         return self.dictionary
         
     def appendJSONToFile(self, outputFilePath):
-        dumpJSONAndAppend(self.dictionary, outputFilePath)
+        dumpJSONAndAppend(self.getDict(), outputFilePath)
         
     def setRowName(self, rowName):
         self.dictionary["Name"] = rowName
@@ -347,7 +347,7 @@ class Choice(UnevinStruct):
         return self.dictionary
         
     def appendJSONToFile(self, outputFilePath):
-        dumpJSONAndAppend(self.dictionary, outputFilePath)
+        dumpJSONAndAppend(self.getDict(), outputFilePath)
         
     def setBody(self, body):
         self.dictionary["Body"] = body
@@ -380,7 +380,7 @@ class Character(UnevinStruct):
         }
         
     def appendJSONToFile(self, outputFilePath):
-        dumpJSONAndAppend(self.dictionary, outputFilePath)
+        dumpJSONAndAppend(self.getDict(), outputFilePath)
     
     def setName(self, name):
         self.dictionary["Name"] = name
